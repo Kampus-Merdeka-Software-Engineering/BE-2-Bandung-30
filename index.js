@@ -8,7 +8,7 @@ const fs = require("fs");
 
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.port || 3000;
 
 // Setup MySQL connection
 const db = mysql.createConnection({
@@ -16,15 +16,15 @@ const db = mysql.createConnection({
     user: process.env.user,
     password: process.env.password,
     database: process.env.database
-  });
+});
 
-  db.connect(err => {
+db.connect(err => {
     if (err) {
-      console.error('Database connection failed: ' + err.stack);
-      return;
+        console.error('Database connection failed: ' + err.stack);
+        return;
     }
     console.log('Connected to database');
-  });
+});
 
 
 // pakai cors biar bisa share resource antar backend dan frontend
@@ -32,47 +32,66 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// handle request di main routes ("/")
-app.get("/", function (request, response) {
-	// aku gamau baca detail requestnya aku mau langsung
-	// kirim response aja
-	response.send("Aku balikin sebuah RESPONz");
+app.get("/", function (req, res) {
+     res.json({"Server status": "Online"});
 });
 
-// dari rute ini harapannya bisa mengirimkan data produk ke yang request data product
 app.get("/articles", (req, res) => {
-	// nanti proses logicnya itu ngambil data dulu dari database, lalu dikirim melaluli response, saat ini kita bakal pake data dari json dulu/fake data
-
-	// ambil data json dari /data/products.json
-	fs.readFile("./data/articles.json", (error, data) => {
-		if (error) res.send("Gagal dalam pembacaan data");
-		const products = JSON.parse(data);
-		res.status(200).send(products);
-	});
+    fs.readFile("./data/articles.json", (error, data) => {
+        if (error) res.send("Gagal dalam pembacaan data");
+        const products = JSON.parse(data);
+        res.status(200).send(products);
+    });
 });
 
 app.get('/data/articles', (req, res) => {
-    // Ambil data dari tabel
     const query = 'SELECT * FROM articles';
     db.query(query, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.status(200).send(result);
+        }
+    });
+});
+
+app.post('/submit-contactus', (req, res) => {
+    const formData = req.body;
+
+    const query = 'INSERT INTO form_contactus SET ?';
+    db.query(query, formData, (err, result) => {
       if (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
       } else {
-        // Kirim data ke halaman baru
-        res.status(200).send(result);
+        console.log('Data inserted');
+        res.status(200).send('Data inserted successfully');
       }
     });
   });
-  
 
-// tangkap semua request/permintaan ke rute yang tidak dikenal
+  app.post('/submit-formpengaduan', (req, res) => {
+    const formData = req.body;
+
+    const query = 'INSERT INTO form_pengaduan SET ?';
+    db.query(query, formData, (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+      } else {
+        console.log('Data inserted');
+        res.status(200).send('Data inserted successfully');
+      }
+    });
+  });
+
 app.all("*", (req, res) => {
-	res.status(404).send("404 routes not found");
+    res.status(404).send("404 Not Found");
 });
 
 app.listen(PORT, () => {
-	console.log(
-		`iya appnya udah nyala nih, cek aja di url: http://localhost:${PORT}`
-	);
+    console.log(
+        `API URL http://localhost:${PORT} or api-revou.mrizkiw.com`
+    );
 });
