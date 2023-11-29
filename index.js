@@ -4,7 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const cors = require('cors');
-const fs = require("fs");
+const fs = require('fs');
 
 
 const app = express();
@@ -32,13 +32,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", function (req, res) {
-     res.json({"Server status": "Online"});
+app.get('/', function (req, res) {
+     res.json({'Server status': 'Online'});
 });
 
-app.get("/articles", (req, res) => {
-    fs.readFile("./data/articles.json", (error, data) => {
-        if (error) res.send("Gagal dalam pembacaan data");
+app.get('/articles', (req, res) => {
+    fs.readFile('./data/articles.json', (error, data) => {
+        if (error) res.send('Gagal dalam pembacaan data');
         const products = JSON.parse(data);
         res.status(200).send(products);
     });
@@ -86,8 +86,8 @@ app.post('/submit-contactus', (req, res) => {
     });
   });
 
-app.all("*", (req, res) => {
-    res.status(404).send("404 Not Found");
+app.all('*', (req, res) => {
+    res.status(404).send('404 Not Found');
 });
 
 app.listen(PORT, () => {
