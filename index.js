@@ -74,6 +74,10 @@ app.post('/submit-contactus', (req, res) => {
   app.post('/submit-formpengaduan', (req, res) => {
     const formData = req.body;
 
+    if (!formData.phone || !formData.phone.startsWith('08')) {
+    return res.status(400).send('Nomor telepon harus dimulai dengan "08"');
+  }
+
     const query = 'INSERT INTO form_pengaduan SET ?';
     db.query(query, formData, (err, result) => {
       if (err) {
