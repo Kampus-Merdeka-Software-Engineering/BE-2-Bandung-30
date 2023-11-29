@@ -36,14 +36,6 @@ app.get('/', function (req, res) {
      res.json({'Server status': 'Online'});
 });
 
-app.get('/articles', (req, res) => {
-    fs.readFile('./data/articles.json', (error, data) => {
-        if (error) res.send('Gagal dalam pembacaan data');
-        const products = JSON.parse(data);
-        res.status(200).send(products);
-    });
-});
-
 app.get('/data/articles', (req, res) => {
     const query = 'SELECT * FROM articles';
     db.query(query, (err, result) => {
