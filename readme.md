@@ -7,11 +7,6 @@
 * Endpoint  : /
 * Method    : GET
 
-### GET Data Articles From JSON
-
-* Endpoint  : /articles
-* Method    : GET
-
 ### GET Data Articles From Database
 
 * Endpoint  : /data/articles
