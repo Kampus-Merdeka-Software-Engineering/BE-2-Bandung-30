@@ -1,4 +1,4 @@
-//CI CD ACTIVE
+//CI CD ACTIVE via Cloud Run
 require('dotenv').config();
 
 const express = require('express');
