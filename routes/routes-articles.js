@@ -36,11 +36,11 @@ articles.get("/articles/:id", async (req, res) => {
 });
 
 articles.get("/articles/category/:category", async (req, res) => {
-    const { id } = req.params;
+    const { category } = req.params;
 
     const connection = await connectionPool.getConnection();
     try {
-        const [query] = await connection.query('SELECT * FROM articles WHERE category = ?', [id]);
+        const [query] = await connection.query('SELECT * FROM articles WHERE category = ?', [category]);
         console.log(query);
         if (!query.length) {
             res.status(404).send("Articles not found");
