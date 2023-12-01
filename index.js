@@ -18,39 +18,23 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const loggerMiddleware = (req, res, next) => {
-  const now = new Date();
-  const formattedTime = now.toLocaleDateString();
-  const method = req.method;
-  const url = req.url;
-  const status = res.statusCode;
-  console.log(`[${formattedTime}] ${method} ${url} - ${status}`);
-  next();
-};
+// const loggerMiddleware = (req, res, next) => {
+//   const now = new Date();
+//   const formattedTime = now.toLocaleDateString();
+//   const method = req.method;
+//   const url = req.url;
+//   const status = res.statusCode;
+//   console.log(`[${formattedTime}] ${method} ${url} - ${status}`);
+//   next();
+// };
 
-app.use(loggerMiddleware);
+// app.use(loggerMiddleware);
 
 app.get('/', function (req, res) {
   res.json({ 'Server status': 'Online' });
 });
 
 app.use('/data', articles);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.post('/submit-contactus', async (req, res) => {
   const formData = req.body;
@@ -66,6 +50,8 @@ app.post('/submit-contactus', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
+  }finally {
+    connection.release();
   }
 });
 
@@ -88,6 +74,8 @@ app.post('/submit-formpengaduan', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
+  }finally {
+    connection.release();
   }
 });
 

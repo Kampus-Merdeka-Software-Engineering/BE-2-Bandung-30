@@ -13,7 +13,9 @@ articles.get('/articles', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }
+    }finally {
+        connection.release();
+      }
 
 });
 
@@ -32,7 +34,9 @@ articles.get("/articles/:id", async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal Server Error');
-    }
+    }finally {
+        connection.release();
+      }
 });
 
 articles.get("/articles/category/:category", async (req, res) => {
@@ -50,7 +54,9 @@ articles.get("/articles/category/:category", async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal Server Error');
-    }
+    }finally {
+        connection.release();
+      }
 });
 
 articles.get('/input/articles/', async (req, res) => {
@@ -89,7 +95,9 @@ articles.post('/data/input/articles/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }
+    }finally {
+        connection.release();
+      }
 });
 
 articles.get('/update/articles/', async (req, res) => {
@@ -129,7 +137,9 @@ articles.put('/update/articles/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }
+    }finally {
+        connection.release();
+      }
 });
 
 articles.post('/update/articles/', async (req, res) => {
@@ -153,7 +163,9 @@ articles.post('/update/articles/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }
+    }finally {
+        connection.release();
+      }
 });
 
 articles.get('/delete/articles/', async (req, res) => {
@@ -185,7 +197,9 @@ articles.delete('/delete/articles/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }
+    }finally {
+        connection.release();
+      }
 });
 
 articles.post('/delete/articles/', async (req, res) => {
@@ -207,7 +221,9 @@ articles.post('/delete/articles/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }
+    }finally {
+        connection.release();
+      }
 });
 
 module.exports = articles;
