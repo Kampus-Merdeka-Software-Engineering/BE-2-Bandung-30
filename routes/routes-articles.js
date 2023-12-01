@@ -74,7 +74,7 @@ articles.get('/input/articles/', async (req, res) => {
     </form> `);
 });
 
-articles.post('/data/input/articles/', async (req, res) => {
+articles.post('/input/articles/', async (req, res) => {
     const formData = req.body;
 
     const { username, password, ...articleData } = formData;

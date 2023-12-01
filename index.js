@@ -5,7 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const cors = require('cors');
-const fs = require('fs');
+// const fs = require('fs');
 
 const { connectionPool } = require("./config/database");
 const articles = require('./routes/routes-articles')
@@ -58,8 +58,8 @@ app.post('/submit-contactus', async (req, res) => {
 app.post('/submit-formpengaduan', async (req, res) => {
   const formData = req.body;
 
-  if (!formData.phone || !formData.phone.startsWith('08')) {
-    return res.status(400).send('Nomor telepon harus dimulai dengan "08"');
+  if (!/^[0-9]+$/.test(formData.phone) || !formData.phone.startsWith('08') || formData.phone.length < 10 || formData.phone.length > 15) {
+    return res.status(400).send('Nomor telepon harus berupa angka dan dimulai dengan "08" serta minimal 10 angka dan tidak lebih dari 15 angka.');
   }
 
   formData.created_at = new Date();
