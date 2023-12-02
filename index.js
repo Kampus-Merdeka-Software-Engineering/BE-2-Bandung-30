@@ -2,10 +2,7 @@
 require('dotenv').config();
 
 const express = require('express');
-const bodyParser = require('body-parser');
-const mysql = require('mysql2');
 const cors = require('cors');
-// const fs = require('fs');
 
 const { connectionPool } = require("./config/database");
 const articles = require('./routes/routes-articles')
@@ -18,17 +15,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// const loggerMiddleware = (req, res, next) => {
-//   const now = new Date();
-//   const formattedTime = now.toLocaleDateString();
-//   const method = req.method;
-//   const url = req.url;
-//   const status = res.statusCode;
-//   console.log(`[${formattedTime}] ${method} ${url} - ${status}`);
-//   next();
-// };
+const loggerMiddleware = (req, res, next) => {
+  const now = new Date();
+  const formattedTime = now.toLocaleDateString();
+  const method = req.method;
+  const url = req.url;
+  const status = res.statusCode;
+  console.log(`[${formattedTime}] ${method} ${url} - ${status}`);
+  next();
+};
 
-// app.use(loggerMiddleware);
+app.use(loggerMiddleware);
 
 app.get('/', function (req, res) {
   res.json({ 'Server status': 'Online' });
@@ -78,6 +75,10 @@ app.post('/submit-formpengaduan', async (req, res) => {
     connection.release();
   }
 });
+
+
+
+
 
 app.all('*', (req, res) => {
   res.status(404).send('404 Not Found');

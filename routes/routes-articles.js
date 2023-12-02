@@ -7,19 +7,38 @@ articles.get('/articles', async (req, res) => {
 
     const connection = await connectionPool.getConnection();
     try {
-        const [query] = await connection.query('SELECT * FROM articles');
-        res.status(200).send(query);
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 10;
+        const startIndex = (page - 1) * pageSize;
 
+        let query = `SELECT * FROM articles`;
+
+        // let query = 'SELECT * FROM articles';
+
+        if (req.query.title) {
+            query += ` WHERE title LIKE '%${req.query.title}%'`;
+        }
+
+        if (req.query.sortBy) {
+            const sortBy = req.query.sortBy;
+            const sortOrder = req.query.sortOrder || 'ASC';
+
+            query += ` ORDER BY ${sortBy} ${sortOrder}`;
+        }
+
+        query += ` LIMIT ${startIndex}, ${pageSize}`;
+
+        const [result] = await connection.query(query);
+        res.status(200).send(result);
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }finally {
+    } finally {
         connection.release();
-      }
-
+    }
 });
 
-articles.get("/articles/:id", async (req, res) => {
+articles.get("/articles/id/:id", async (req, res) => {
     const { id } = req.params;
 
     const connection = await connectionPool.getConnection();
@@ -32,11 +51,70 @@ articles.get("/articles/:id", async (req, res) => {
             res.status(200).send(query);
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).send('Internal Server Error');
-    }finally {
+    } finally {
         connection.release();
-      }
+    }
+});
+
+articles.get("/articles/category/", async (req, res) => {
+    const connection = await connectionPool.getConnection();
+
+    try {
+        let query = `SELECT DISTINCT category FROM articles`;
+        if (req.query.sortBy) {
+            const sortBy = req.query.sortBy;
+            const sortOrder = req.query.sortOrder || 'ASC';
+
+            query += ` ORDER BY ${sortBy} ${sortOrder}`;
+        }
+
+        const [result] = await connection.query(query);
+
+        res.status(200).send(result.map(item => item.category));
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    } finally {
+        connection.release();
+    }
+});
+
+articles.get("/articles/subcategory/", async (req, res) => {
+    const connection = await connectionPool.getConnection();
+
+    try {
+        let query = `SELECT DISTINCT subcategory FROM articles`;
+        if (req.query.sortBy) {
+            const sortBy = req.query.sortBy;
+            const sortOrder = req.query.sortOrder || 'ASC';
+
+            query += ` ORDER BY ${sortBy} ${sortOrder}`;
+        }
+
+        const [result] = await connection.query(query);
+        res.status(200).send(result.map(item => item.subcategory));
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    } finally {
+        connection.release();
+    }
+});
+
+articles.get("/articles/newest/", async (req, res) => {
+const connection = await connectionPool.getConnection();
+
+  try {
+      const [result] = await connection.query('SELECT * FROM articles ORDER BY publish_at DESC LIMIT 5');
+      res.status(200).send(result);
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  } finally {
+      connection.release();
+  }
 });
 
 articles.get("/articles/category/:category", async (req, res) => {
@@ -44,6 +122,7 @@ articles.get("/articles/category/:category", async (req, res) => {
 
     const connection = await connectionPool.getConnection();
     try {
+        console.log(category);
         const [query] = await connection.query('SELECT * FROM articles WHERE category = ?', [category]);
         console.log(query);
         if (!query.length) {
@@ -52,12 +131,18 @@ articles.get("/articles/category/:category", async (req, res) => {
             res.status(200).send(query);
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).send('Internal Server Error');
-    }finally {
+    } finally {
         connection.release();
-      }
+    }
 });
+
+
+
+
+
+
 
 articles.get('/input/articles/', async (req, res) => {
     res.send(`
@@ -95,9 +180,9 @@ articles.post('/input/articles/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }finally {
+    } finally {
         connection.release();
-      }
+    }
 });
 
 articles.get('/update/articles/', async (req, res) => {
@@ -137,9 +222,9 @@ articles.put('/update/articles/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }finally {
+    } finally {
         connection.release();
-      }
+    }
 });
 
 articles.post('/update/articles/', async (req, res) => {
@@ -163,9 +248,9 @@ articles.post('/update/articles/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }finally {
+    } finally {
         connection.release();
-      }
+    }
 });
 
 articles.get('/delete/articles/', async (req, res) => {
@@ -197,9 +282,9 @@ articles.delete('/delete/articles/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }finally {
+    } finally {
         connection.release();
-      }
+    }
 });
 
 articles.post('/delete/articles/', async (req, res) => {
@@ -221,9 +306,9 @@ articles.post('/delete/articles/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
-    }finally {
+    } finally {
         connection.release();
-      }
+    }
 });
 
 module.exports = articles;
