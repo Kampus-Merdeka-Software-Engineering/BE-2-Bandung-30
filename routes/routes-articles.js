@@ -104,31 +104,91 @@ articles.get("/articles/subcategory/", async (req, res) => {
 });
 
 articles.get("/articles/newest/", async (req, res) => {
-const connection = await connectionPool.getConnection();
+    const connection = await connectionPool.getConnection();
 
-  try {
-      const [result] = await connection.query('SELECT * FROM articles ORDER BY publish_at DESC LIMIT 5');
-      res.status(200).send(result);
-  } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
-  } finally {
-      connection.release();
-  }
+    try {
+        const [result] = await connection.query('SELECT * FROM articles ORDER BY publish_at DESC LIMIT 5');
+        res.status(200).send(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    } finally {
+        connection.release();
+    }
 });
 
 articles.get("/articles/category/:category", async (req, res) => {
-    const { category } = req.params;
 
     const connection = await connectionPool.getConnection();
     try {
-        console.log(category);
-        const [query] = await connection.query('SELECT * FROM articles WHERE category = ?', [category]);
-        console.log(query);
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 10;
+        const startIndex = (page - 1) * pageSize;
+
+        let query = 'SELECT * FROM articles';
+
+        if (req.params.category) {
+            const category = req.params.category;
+            query += ` WHERE category = '${category}'`;
+            // query += ` AND title LIKE '%${category}%'`;
+        }
+
+        if (req.query.sortBy) {
+            const sortBy = req.query.sortBy;
+            const sortOrder = req.query.sortOrder || 'ASC';
+
+            query += ` ORDER BY ${sortBy} ${sortOrder}`;
+        }
+
+        query += ` LIMIT ${startIndex}, ${pageSize}`;
+
+        const [result] = await connection.query(query);
+
         if (!query.length) {
-            res.status(404).send("Articles not found");
+            res.status(404).send("Category not found");
         } else {
-            res.status(200).send(query);
+            res.status(200).send(result);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    } finally {
+        connection.release();
+    }
+});
+
+articles.get("/articles/subcategory/:subcategory", async (req, res) => {
+
+    const connection = await connectionPool.getConnection();
+    try {
+
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 10;
+        const startIndex = (page - 1) * pageSize;
+
+        let query = 'SELECT * FROM articles';
+
+        if (req.params.subcategory) {
+            const subcategory = req.params.subcategory;
+            query += ` WHERE subcategory = '${subcategory}'`;
+            // query += ` AND title LIKE '%${subcategory}%'`;
+        }
+
+        if (req.query.sortBy) {
+            const sortBy = req.query.sortBy;
+            const sortOrder = req.query.sortOrder || 'ASC';
+
+            query += ` ORDER BY ${sortBy} ${sortOrder}`;
+        }
+
+        query += ` LIMIT ${startIndex}, ${pageSize}`;
+
+        const [result] = await connection.query(query);
+
+        if (!query.length) {
+            res.status(404).send("Subcategory not found");
+        } else {
+            res.status(200).send(result);
         }
     } catch (error) {
         console.error(error);
