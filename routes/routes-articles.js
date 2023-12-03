@@ -12,11 +12,13 @@ articles.get('/articles', async (req, res) => {
         const startIndex = (page - 1) * pageSize;
 
         let query = `SELECT * FROM articles`;
+        const queryParams = [];
 
         // let query = 'SELECT * FROM articles';
 
         if (req.query.title) {
-            query += ` WHERE title LIKE '%${req.query.title}%'`;
+            query += ` WHERE title LIKE ?`;
+            queryParams.push(`%${req.query.title}%`);
         }
 
         if (req.query.sortBy) {
@@ -28,7 +30,9 @@ articles.get('/articles', async (req, res) => {
 
         query += ` LIMIT ${startIndex}, ${pageSize}`;
 
-        const [result] = await connection.query(query);
+        console.log(query)
+
+        const [result] = await connection.query(query, queryParams);
         res.status(200).send(result);
     } catch (error) {
         console.error(error);
@@ -126,10 +130,12 @@ articles.get("/articles/category/:category", async (req, res) => {
         const startIndex = (page - 1) * pageSize;
 
         let query = 'SELECT * FROM articles';
+        const queryParams = [];
 
         if (req.params.category) {
-            const category = req.params.category;
-            query += ` WHERE category = '${category}'`;
+            
+            query += ` WHERE category = ?`;
+            queryParams.push(req.params.category);
             // query += ` AND title LIKE '%${category}%'`;
         }
 
@@ -142,7 +148,7 @@ articles.get("/articles/category/:category", async (req, res) => {
 
         query += ` LIMIT ${startIndex}, ${pageSize}`;
 
-        const [result] = await connection.query(query);
+        const [result] = await connection.query(query, queryParams);
 
         if (!query.length) {
             res.status(404).send("Category not found");
@@ -167,11 +173,12 @@ articles.get("/articles/subcategory/:subcategory", async (req, res) => {
         const startIndex = (page - 1) * pageSize;
 
         let query = 'SELECT * FROM articles';
+        const queryParams = [];
 
         if (req.params.subcategory) {
-            const subcategory = req.params.subcategory;
-            query += ` WHERE subcategory = '${subcategory}'`;
-            // query += ` AND title LIKE '%${subcategory}%'`;
+            
+            query += ` WHERE subcategory = ?`;
+    queryParams.push(req.params.subcategory);
         }
 
         if (req.query.sortBy) {
@@ -183,7 +190,7 @@ articles.get("/articles/subcategory/:subcategory", async (req, res) => {
 
         query += ` LIMIT ${startIndex}, ${pageSize}`;
 
-        const [result] = await connection.query(query);
+        const [result] = await connection.query(query, queryParams);
 
         if (!query.length) {
             res.status(404).send("Subcategory not found");
