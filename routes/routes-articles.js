@@ -30,7 +30,6 @@ articles.get('/articles', async (req, res) => {
 
         query += ` LIMIT ${startIndex}, ${pageSize}`;
 
-        console.log(query)
 
         const [result] = await connection.query(query, queryParams);
         res.status(200).send(result);
@@ -48,7 +47,6 @@ articles.get("/articles/id/:id", async (req, res) => {
     const connection = await connectionPool.getConnection();
     try {
         const [query] = await connection.query('SELECT * FROM articles WHERE id = ?', [id]);
-        console.log(query);
         if (!query.length) {
             res.status(404).send("Articles not found");
         } else {
@@ -232,10 +230,8 @@ articles.post('/input/articles/', async (req, res) => {
         if (adminQuery.length > 0) {
             // Jika admin valid
             const [query] = await connection.query('INSERT INTO articles SET ?', articleData);
-            console.log("Ada yang menambahkan artikel.");
             res.status(200).send('Data inserted successfully');
         } else {
-            console.log("Invalid credentials");
             res.status(403).send('Invalid credentials');
         }
     } catch (error) {
@@ -274,10 +270,8 @@ articles.put('/update/articles/', async (req, res) => {
         if (adminQuery.length > 0) {
             // Jika admin valid
             const [query] = await connection.query('UPDATE articles SET ? WHERE id = ?', [articleData, formData.id]);
-            console.log("Ada yang mengubah artikel.");
             res.status(200).send('Data updated successfully');
         } else {
-            console.log("Invalid credentials");
             res.status(403).send('Invalid credentials');
         }
     } catch (error) {
@@ -308,10 +302,8 @@ articles.delete('/delete/articles/', async (req, res) => {
         if (adminQuery.length > 0) {
             // Jika admin valid
             const [query] = await connection.query('DELETE FROM articles WHERE id = ?', formData.id);
-            console.log("Ada yang menghapus artikel.");
             res.status(200).send('Data deleted successfully');
         } else {
-            console.log("Invalid credentials");
             res.status(403).send('Invalid credentials');
         }
     } catch (error) {
