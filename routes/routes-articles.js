@@ -14,8 +14,6 @@ articles.get('/articles', async (req, res) => {
         let query = `SELECT * FROM articles`;
         const queryParams = [];
 
-        // let query = 'SELECT * FROM articles';
-
         if (req.query.title) {
             query += ` WHERE title LIKE ?`;
             queryParams.push(`%${req.query.title}%`);
@@ -134,7 +132,6 @@ articles.get("/articles/category/:category", async (req, res) => {
             
             query += ` WHERE category = ?`;
             queryParams.push(req.params.category);
-            // query += ` AND title LIKE '%${category}%'`;
         }
 
         if (req.query.sortBy) {
@@ -228,7 +225,6 @@ articles.post('/input/articles/', async (req, res) => {
         const [adminQuery] = await connection.query('SELECT * FROM admin WHERE username = ? AND password = ?', [formData.username, formData.password]);
 
         if (adminQuery.length > 0) {
-            // Jika admin valid
             const [query] = await connection.query('INSERT INTO articles SET ?', articleData);
             res.status(200).send('Data inserted successfully');
         } else {
@@ -268,7 +264,6 @@ articles.put('/update/articles/', async (req, res) => {
         const [adminQuery] = await connection.query('SELECT * FROM admin WHERE username = ? AND password = ?', [formData.username, formData.password]);
 
         if (adminQuery.length > 0) {
-            // Jika admin valid
             const [query] = await connection.query('UPDATE articles SET ? WHERE id = ?', [articleData, formData.id]);
             res.status(200).send('Data updated successfully');
         } else {
@@ -300,7 +295,6 @@ articles.delete('/delete/articles/', async (req, res) => {
         const [adminQuery] = await connection.query('SELECT * FROM admin WHERE username = ? AND password = ?', [formData.username, formData.password]);
 
         if (adminQuery.length > 0) {
-            // Jika admin valid
             const [query] = await connection.query('DELETE FROM articles WHERE id = ?', formData.id);
             res.status(200).send('Data deleted successfully');
         } else {
