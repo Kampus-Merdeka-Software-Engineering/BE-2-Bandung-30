@@ -198,12 +198,6 @@ articles.get("/articles/subcategory/:subcategory", async (req, res) => {
     }
 });
 
-
-
-
-
-
-
 articles.get('/input/articles/', async (req, res) => {
     res.send(`
     <form method="post" action="/data/input/articles/">
@@ -287,32 +281,6 @@ articles.put('/update/articles/', async (req, res) => {
     }
 });
 
-articles.post('/update/articles/', async (req, res) => {
-    const formData = req.body;
-
-    const { username, password, id, ...articleData } = formData;
-
-    const connection = await connectionPool.getConnection();
-    try {
-        const [adminQuery] = await connection.query('SELECT * FROM admin WHERE username = ? AND password = ?', [formData.username, formData.password]);
-
-        if (adminQuery.length > 0) {
-            // Jika admin valid
-            const [query] = await connection.query('UPDATE articles SET ? WHERE id = ?', [articleData, formData.id]);
-            console.log("Ada yang mengubah artikel.");
-            res.status(200).send('Data updated successfully');
-        } else {
-            console.log("Invalid credentials");
-            res.status(403).send('Invalid credentials');
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    } finally {
-        connection.release();
-    }
-});
-
 articles.get('/delete/articles/', async (req, res) => {
     res.send(`
     <form method="POST" action="/data/delete/articles/">
@@ -324,30 +292,6 @@ articles.get('/delete/articles/', async (req, res) => {
 });
 
 articles.delete('/delete/articles/', async (req, res) => {
-    const formData = req.body;
-
-    const connection = await connectionPool.getConnection();
-    try {
-        const [adminQuery] = await connection.query('SELECT * FROM admin WHERE username = ? AND password = ?', [formData.username, formData.password]);
-
-        if (adminQuery.length > 0) {
-            // Jika admin valid
-            const [query] = await connection.query('DELETE FROM articles WHERE id = ?', formData.id);
-            console.log("Ada yang menghapus artikel.");
-            res.status(200).send('Data deleted successfully');
-        } else {
-            console.log("Invalid credentials");
-            res.status(403).send('Invalid credentials');
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    } finally {
-        connection.release();
-    }
-});
-
-articles.post('/delete/articles/', async (req, res) => {
     const formData = req.body;
 
     const connection = await connectionPool.getConnection();
