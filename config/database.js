@@ -1,8 +1,4 @@
-const mysql = require("mysql2/promise");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
-const connectionPool = mysql.createPool({
-	uri:
-		process.env.db_uri || `msql://root:password@localhost:3306/revou_form`,
-});
-
-module.exports = { connectionPool };
+module.exports = { prisma };

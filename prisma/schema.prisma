@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model articles {
+  id         Int       @id @default(autoincrement())
+  title      String
+  desc       String
+  category   String
+  subcategory String
+  img_url    String
+  publish_at DateTime @default(now())
+}
+
+model admin {
+  id       Int      @id @default(autoincrement())
+  username String
+  password String
+}
+
+model form_contactus {
+  id         Int      @id @default(autoincrement())
+  namalengkap String
+  email String
+  subject String
+  created_at DateTime @default(now())
+}
+
+model form_pengaduan {
+  id         Int      @id @default(autoincrement())
+  email String
+  nama String
+  phone String
+  location String
+  date DateTime @default(now())
+  complaint String
+  outcome String
+  created_at DateTime @default(now())
+}
