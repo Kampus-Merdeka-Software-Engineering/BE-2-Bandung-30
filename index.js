@@ -29,7 +29,10 @@ const loggerMiddleware = (req, res, next) => {
 app.use(loggerMiddleware);
 
 app.get('/', function (req, res) {
-  res.json({ 'Server status': 'Online' });
+  res.json({ 
+    'serverStatus': 'Online',
+    'dbMethod': 'ORM by Prisma'
+ });
 });
 
 app.use('/data', articles);
