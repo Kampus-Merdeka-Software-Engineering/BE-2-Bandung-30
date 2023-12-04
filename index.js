@@ -73,8 +73,8 @@ app.all('*', (req, res) => {
   res.status(404).send('404 Not Found');
 });
 
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   console.log(
-    `API URL http://localhost:${PORT} or api-revou.mrizkiw.com`
+      `API URL http://localhost:${PORT} or api-revou.mrizkiw.com`
   );
 });
