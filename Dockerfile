@@ -3,6 +3,5 @@ WORKDIR /app
 COPY package.json package-lock.json /app/
 RUN npm install
 COPY . /app
-COPY ./prisma prisma
-RUN npx prisma generate
+RUN prisma generate
 CMD ["node", "index.js"]
