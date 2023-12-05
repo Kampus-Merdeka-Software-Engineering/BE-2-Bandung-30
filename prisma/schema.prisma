@@ -15,6 +15,7 @@ model articles {
   subcategory String
   img_url    String
   publish_at DateTime @default(now())
+  source String
 }
 
 model admin {
