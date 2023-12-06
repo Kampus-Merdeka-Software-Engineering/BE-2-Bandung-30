@@ -178,6 +178,7 @@ articles.get('/input/articles/', async (req, res) => {
     <input type="text" name="subcategory" placeholder="subcategory" required /><br/>
     <input type="text" name="img_url" placeholder="img_url" required /><br/>
     <input type="date" name="publish_at" placeholder="publish_at" required /><br/>
+    <input type="text" name="source" placeholder="source" required /><br/>
     <input type="submit" value="what are you doing here?" />
     </form> `);
 });
@@ -227,6 +228,7 @@ articles.get('/update/articles/', async (req, res) => {
     <input type="text" name="subcategory" placeholder="subcategory" required /><br/>
     <input type="text" name="img_url" placeholder="img_url" required /><br/>
     <input type="date" name="publish_at" placeholder="publish_at" required /><br/>
+    <input type="text" name="source" placeholder="source" required /><br/>
     <input type="hidden" name="_method" value="PUT">
     <input type="submit" value="what are you doing here?" />
     </form> `);

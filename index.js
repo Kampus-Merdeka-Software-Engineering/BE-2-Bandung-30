@@ -40,7 +40,10 @@ app.use('/data', articles);
 app.post('/submit-contactus', async (req, res) => {
   const formData = req.body;
 
-  formData.created_at = new Date();
+  const currentTime = new Date();
+  currentTime.setHours(currentTime.getHours() + 7);
+
+  formData.created_at = currentTime.toISOString();
 
   try {
     await prisma.form_contactus.create({ data: formData });
@@ -58,7 +61,11 @@ app.post('/submit-formpengaduan', async (req, res) => {
     return res.status(400).send('Nomor telepon harus berupa angka dan dimulai dengan "08" serta minimal 10 angka dan tidak lebih dari 15 angka.');
   }
 
-  formData.created_at = new Date();
+  const currentTime = new Date();
+  currentTime.setHours(currentTime.getHours() + 7);
+
+  formData.date = currentTime.toISOString();
+  formData.created_at = formData.date;
 
   try {
     await prisma.form_pengaduan.create({ data: formData });

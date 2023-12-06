@@ -20,6 +20,7 @@ model articles {
 
 model admin {
   id       Int      @id @default(autoincrement())
+  name String
   username String
   password String
 }
