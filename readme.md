@@ -359,7 +359,7 @@ none
 ```
 * Response (200) :
 ```
-Data deleted successfully
+Data inserted successfully
 ```
 </details>
 <details>
@@ -386,6 +386,10 @@ none
 ```
 * Response (200) :
 ```
-Data deleted successfully
+Data inserted successfully
+```
+* Response (400) :
+```
+Nomor telepon harus berupa angka dan dimulai dengan "08" serta minimal 10 angka dan tidak lebih dari 15 angka.
 ```
 </details>
