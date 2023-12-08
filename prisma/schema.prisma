@@ -9,13 +9,13 @@ datasource db {
 
 model articles {
   id         Int       @id @default(autoincrement())
-  title      String
-  desc       String
+  title      String 
+  desc       String @db.VarChar(1000)
   category   String
   subcategory String
-  img_url    String
-  publish_at DateTime @default(now())
-  source String
+  img_url    String @db.VarChar(1000)
+  publish_at DateTime? @db.Date
+  source String? @db.VarChar(1000)
 }
 
 model admin {
@@ -29,8 +29,8 @@ model form_contactus {
   id         Int      @id @default(autoincrement())
   namalengkap String
   email String
-  subject String
-  created_at DateTime @default(now())
+  subject String @db.VarChar(1000)
+  created_at DateTime?
 }
 
 model form_pengaduan {
@@ -39,8 +39,8 @@ model form_pengaduan {
   nama String
   phone String
   location String
-  date DateTime @default(now())
-  complaint String
-  outcome String
-  created_at DateTime @default(now())
+  date DateTime @db.Date
+  complaint String @db.VarChar(1000)
+  outcome String @db.VarChar(1000)
+  created_at DateTime?
 }

@@ -14,6 +14,22 @@ articles.get('/articles', async (req, res) => {
         title: {
           contains: req.query.title || '',
         },
+        AND: [
+          {
+            OR: [
+              {
+                category: {
+                  contains: req.query.category || '',
+                },
+              },
+              {
+                subcategory: {
+                  contains: req.query.subcategory || '',
+                },
+              },
+            ],
+          },
+        ],
       },
       orderBy: {
         [req.query.sortBy || 'id']: req.query.sortOrder || 'asc',
@@ -21,6 +37,7 @@ articles.get('/articles', async (req, res) => {
       skip: startIndex,
       take: pageSize,
     });
+    
 
     res.status(200).send(result);
   } catch (error) {
@@ -28,6 +45,7 @@ articles.get('/articles', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 articles.get("/articles/id/:id", async (req, res) => {
   const { id } = req.params;
