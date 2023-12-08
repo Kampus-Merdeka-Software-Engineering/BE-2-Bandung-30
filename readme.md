@@ -36,6 +36,10 @@ none
 * Request Params :
 ```
 title
+category
+subcategory
+page
+pageSize
 sortBy
 sortOrder
 ```
