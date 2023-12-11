@@ -1,4 +1,12 @@
-# Main URL
+# Spill Detik Backend (Group 30)
+
+## Description
+This project serves as the backend for a news portal website, in this case, [Spill Detik](https://kampus-merdeka-software-engineering.github.io/FE-2-Bandung-30/index.html). The application is built using Express.js and employs the Prisma ORM for interaction with a MySQL database. The application displays data retrieved from the database and also includes all CRUD operations.
+
+## Installations
+Users should clone this repository from GitHub. The application requires Node.js, Express.js, and Prisma. Fill in the necessary elements in the .env file, referring to the .env.example file for guidance. To run the server, execute `npx prisma generate` and `npx prisma migrate dev`. After that, you can start the server with `npm run start`.
+
+## Main URL
 * https://api-revou.mrizkiw.com/
 
 ## Endpoint
